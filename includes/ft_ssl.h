@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 13:32:13 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 14:08:51 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,14 @@ typedef struct		s_mem
 typedef t_mem			*(*t_padding)(t_mem *mem);
 typedef void			(*t_hash)(t_mem *mem);
 typedef void			(*t_print)(t_mem *mem);
+//typedef unsigned 	Digest_sha256[4];
+// unsigned int H_5 = {
+// 	0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
+// };
+// extern unsigned int H_256 = {
+// 	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+// 	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+// };
 
 // Fuctions Prototype
 int		Error_print(char *str);
