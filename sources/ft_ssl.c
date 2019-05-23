@@ -6,11 +6,11 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:41 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 11:22:58 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 12:54:18 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/ft_ssl.h"
+#include "../includes/ft_ssl.h"
 
 
 void	ft_hash(t_opt *opt, t_mem *msg, t_arg *arg)
@@ -48,7 +48,7 @@ void	read_args(t_opt *opt)
 		if (!arg->is_string && (fd = open(arg->str, O_RDONLY)) != -1)
 		{
 			msg = stdin_read_fd(fd);
-			hash(opt, msg, arg);
+			ft_hash(opt, msg, arg);
 		}
 		else
 		{
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     opt = NULL;
     if(argc < 2)
-        return (Error_printf(argv[0]));
+        return (Error_print(argv[0]));
     opt = opt_checker(opt, argv); // util_parser.c
     if (opt->p || !opt->arg)
         read_stdin(opt); // util_stdin_parser.c

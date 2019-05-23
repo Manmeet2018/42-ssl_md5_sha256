@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 11:40:45 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 13:32:13 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@
 # define BB(x) (RROT(x, 6) ^ RROT(x, 11) ^ RROT(x, 25))
 # define CC(x) (RROT(x, 7) ^ RROT(x, 18) ^ SHR(x, 3))
 # define DD(x) (RROT(x, 17) ^ RROT(x, 19) ^ SHR(x, 10))
-# define A_ H_256[0]
-# define B_ H_256[1]
-# define C_ H_256[2]
-# define D_ H_256[3]
-# define E_ H_256[4]
-# define F_ H_256[5]
-# define G_ H_256[6]
-# define H_ H_256[7]
+# define A_A H_256[0]
+# define B_B H_256[1]
+# define C_C H_256[2]
+# define D_D H_256[3]
+# define E_E H_256[4]
+# define F_F H_256[5]
+# define G_G H_256[6]
+# define H_H H_256[7]
 
 typedef struct		s_arg
 {
@@ -77,22 +77,6 @@ typedef struct		s_mem
 typedef t_mem			*(*t_padding)(t_mem *mem);
 typedef void			(*t_hash)(t_mem *mem);
 typedef void			(*t_print)(t_mem *mem);
-unsigned int			H_5[4];
-unsigned int			H_256[8];
-//typedef unsigned 	Digest_sha256[4];
-
-// main struct for all operation
-t_padding		s_paddings[] = {padding_md5, padding_sha256};
-t_hash			s_hash_value[] = {hash_md5, hash_sha256};
-t_print			s_writer[] = {write_md5, write_sha256};
-
-// digest for md5 & sha256
-H_5 = { 0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476 };
-H_256 = {
-	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-};
-
 
 // Fuctions Prototype
 int		Error_print(char *str);
@@ -111,4 +95,11 @@ void	write_sha256(t_mem *mem);
 void	hash_sha256(t_mem *mem);
 t_mem	*padding_sha256(t_mem *mem);
 char	*ft_itoa_base(intmax_t n, int base);
+
+
+// main struct for all operation
+t_padding		s_paddings[] = {padding_md5, padding_sha256};
+t_hash			s_hash_value[] = {hash_md5, hash_sha256};
+t_print			s_writer[] = {write_md5, write_sha256};
+
 # endif

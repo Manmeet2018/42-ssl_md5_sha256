@@ -6,11 +6,13 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 11:27:39 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 13:35:38 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/ft_ssl.h"
+#include "../includes/ft_ssl.h"
+
+extern unsigned int H_256[8];
 
 unsigned int h_m[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -31,6 +33,8 @@ unsigned int h_m[64] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
+
+// Padding for extra 0's 
 t_mem	*padding_sha256(t_mem *mem)
 {
 	t_mem		*msg;
@@ -55,6 +59,7 @@ t_mem	*padding_sha256(t_mem *mem)
 	return (msg);
 }
 
+// Get block and it's size is of 64 bit.
 unsigned int    *get_cell(unsigned char *offset)
 {
     int				i;
@@ -76,28 +81,41 @@ unsigned int    *get_cell(unsigned char *offset)
     
 }
 
-
+//sha_hash_solver
 static void		sha256_hash_solver(unsigned int *M, int i)
 {
-	int i;
 	unsigned int t[2];
 
 	i = -1;
 	while(++i < 64)
 	{
-		t[0] = H_ + BB(E_) + CH(E_, F_, G_) + h_m[i] + M[i];
-		t[1] = A(A_) + MAJ(A_, B_, C_);
-		H_ = G_;
-		G_ = F_;
-		F_ = E_;
-		E_ = D_ + t[0];
-		D_ = C_;
-		C_ = B_;
-		B_ = A_;
-		A_ = t[0] + t[1];
+		t[0] = H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
+		t[1] = AA(A_A) + MAJ(A_A, B_B, C_C);
+		H_H = G_G;
+		G_G = F_F;
+		F_F = E_E;
+		E_E = D_D + t[0];
+		D_D = C_C;
+		C_C = B_B;
+		B_B = A_A;
+		A_A = t[0] + t[1];
 	}
 }
 
+// Digest sha_hash
+void		init_hash()
+{
+	H_256[0] = 0x6a09e667;
+	H_256[1] = 0xbb67ae85;
+	H_256[2] = 0x3c6ef372;
+	H_256[3] = 0xa54ff53a;
+	H_256[4] = 0x510e527f;
+	H_256[5] = 0x9b05688c;
+	H_256[6] = 0x1f83d9ab;
+	H_256[7] = 0x5be0cd19;
+}
+
+// driver sha_hash_256
 void            hash_sha256(t_mem *mem)
 {
 	int		    	block_jump;  
@@ -105,7 +123,8 @@ void            hash_sha256(t_mem *mem)
     int             j;
 
     block_jump = 0;
-    M = NULL;
+	M = NULL;
+	init_hash();
 	while (block_jump < mem->len)
 	{
         M = get_cell(mem->data + block_jump);
