@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 11:33:00 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 11:40:45 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,10 @@
 # define CH(x, y, z) (((x) & (y)) ^ (~(x) & (z)))
 # define MAJ(x, y, z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 # define SHR(x, n) ((x) >> n)
-# define ROTR(x, n) (((x) >> (n)) | ((x) << (32 - (n))))
-# define AA(x) (ROTR(x, 2) ^ ROTR(x, 13) ^ ROTR(x, 22))
-# define BB(x) (ROTR(x, 6) ^ ROTR(x, 11) ^ ROTR(x, 25))
-# define CC(x) (ROTR(x, 7) ^ ROTR(x, 18) ^ SHR(x, 3))
-# define DD(x) (ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10))
+# define AA(x) (RROT(x, 2) ^ RROT(x, 13) ^ RROT(x, 22))
+# define BB(x) (RROT(x, 6) ^ RROT(x, 11) ^ RROT(x, 25))
+# define CC(x) (RROT(x, 7) ^ RROT(x, 18) ^ SHR(x, 3))
+# define DD(x) (RROT(x, 17) ^ RROT(x, 19) ^ SHR(x, 10))
 # define A_ H_256[0]
 # define B_ H_256[1]
 # define C_ H_256[2]
