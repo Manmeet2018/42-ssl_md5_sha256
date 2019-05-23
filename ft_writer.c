@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 12:09:18 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/22 12:15:39 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 11:27:58 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,21 @@ void	write_suffix(t_arg *arg)
 	(arg->is_string) ? (ft_putchar('"')) : 0;
 }
 
-void	write_output_md5(t_mem *mem)
+void	write_md5(t_mem *mem)
 {
-	uint8_t			*p;
+	uint8_t			*s;
 	int				i;
-	int				y;
+	int				j;
 	char			*tmp;
 
 	i = -1;
 	while (++i < 4)
 	{
-		y = -1;
-		p = (uint8_t *)&mem->h[i];
-		while (++y < 4)
+		j = -1;
+		s = (uint8_t *)&mem->h[i];
+		while (++j < 4)
 		{
-			tmp = ft_itoa_base((int)p[y], 16);
+			tmp = ft_itoa_base((int)s[j], 16);
 			if (ft_strlen(tmp) == 1)
 				ft_putchar('0');
 			ft_putstr(tmp);
@@ -64,20 +64,20 @@ void	write_output_md5(t_mem *mem)
 	}
 }
 
-void	write_output_sha256(t_mem *mem)
+void	write_sha256(t_mem *mem)
 {
-	unsigned int	*p;
+	unsigned int	*s;
 	int				i;
-	int				y;
+	int				j;
 	char			*tmp;
 
 	i = -1;
 	while (++i < 8)
 	{
-		p = (unsigned int *)&mem->h[i];
+		s = (unsigned int *)&mem->h[i];
 		tmp = ft_itoa_base((uintmax_t)mem->h[i], 16);
-		y = ft_strlen(tmp);
-		while (y++ < 8)
+		j = ft_strlen(tmp);
+		while (j++ < 8)
 			ft_putchar('0');
 		ft_putstr(tmp);
 		ft_strdel(&tmp);

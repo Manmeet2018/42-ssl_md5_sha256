@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:41 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/22 12:15:32 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 11:22:58 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	read_args(t_opt *opt)
 	}
 }
 
-
 int main(int argc, char **argv)
 {
     t_opt   *opt;
@@ -74,4 +73,5 @@ int main(int argc, char **argv)
         read_stdin(opt); // util_stdin_parser.c
     if (argc >= 3)
 		read_args(opt);
+	return (0);
 }
