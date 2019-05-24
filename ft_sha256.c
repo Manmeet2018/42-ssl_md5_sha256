@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 17:03:13 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/24 11:39:13 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,13 @@ t_mem	*padding_sha256(t_mem *mem)
 	newlen = len + 1;
 	while (newlen % 64 != 56)
 		newlen++;
-	msg->data = (unsigned char *)ft_strnew(newlen + 64);
+	msg->data = (unsigned char *)malloc(sizeof(unsigned char) * newlen);
 	msg->len = newlen;
 	ft_memcpy(msg->data, mem->data, mem->len);
 	msg->data[len] = (unsigned char)128;
 	while (++len <= newlen)
 		msg->data[len] = 0;
+	bitlen = swap_uint64(bitlen);
 	ft_memcpy(msg->data + newlen, &bitlen, 8);
 	ft_free_mem(mem);
 	return (msg);
@@ -80,12 +81,26 @@ unsigned int    *get_cell(unsigned char *offset)
     
 }
 
+// Digest sha_hash
+static void		init_hash()
+{
+	H_256[0] = 0x6a09e667;
+	H_256[1] = 0xbb67ae85;
+	H_256[2] = 0x3c6ef372;
+	H_256[3] = 0xa54ff53a;
+	H_256[4] = 0x510e527f;
+	H_256[5] = 0x9b05688c;
+	H_256[6] = 0x1f83d9ab;
+	H_256[7] = 0x5be0cd19;
+}
+
 //sha_hash_solver
 static void		sha256_hash_solver(unsigned int *M, int i)
 {
 	unsigned int t[2];
 
 	i = -1;
+	init_hash();
 	while(++i < 64)
 	{
 		t[0] = H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
@@ -101,19 +116,6 @@ static void		sha256_hash_solver(unsigned int *M, int i)
 	}
 }
 
-// Digest sha_hash
-static void		init_hash()
-{
-	H_256[0] = 0x6a09e667;
-	H_256[1] = 0xbb67ae85;
-	H_256[2] = 0x3c6ef372;
-	H_256[3] = 0xa54ff53a;
-	H_256[4] = 0x510e527f;
-	H_256[5] = 0x9b05688c;
-	H_256[6] = 0x1f83d9ab;
-	H_256[7] = 0x5be0cd19;
-}
-
 // driver sha_hash_256
 void            hash_sha256(t_mem *mem)
 {
@@ -124,6 +126,7 @@ void            hash_sha256(t_mem *mem)
     block_jump = 0;
 	M = NULL;
 	init_hash();
+	ft_memcpy(mem->h, H_256, sizeof(int) * 8);
 	while (block_jump < mem->len)
 	{
         M = get_cell(mem->data + block_jump);

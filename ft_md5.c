@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 13:47:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 17:19:58 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/24 11:31:28 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,17 @@ t_mem	*padding_md5(t_mem *mem)
 // helper for solver
 static void     hash_md5_solver_helper(uint32_t *f, uint32_t *g, uint32_t *M, int i)
 {
-    *f = *f + A + h_k[i] + M[*g];
-    A = D;
+	unsigned int T;
+
+    T = D;
     D = C;
     C = B;
-    B += LROT(*f, h_s[i]);
-    H_5[0] += A;
-    H_5[1] += B;
-    H_5[2] += C;
-    H_5[3] += D;
+	B += LROT(*f + A + h_k[i] + M[*g], h_s[i]);
+	A = T;
+    H_5[0] = A;
+    H_5[1] = B;
+    H_5[2] = C;
+    H_5[3] = D;
     
 }
 
@@ -109,8 +111,8 @@ static void     md5_hash_solver(uint32_t *M, int i)
 	{
 		f = I(B , C, D);
 		g = (7 * i) % 16;
-    }
-    hash_md5_solver_helper(&f, &g, M, i);
+	}
+	hash_md5_solver_helper(&f, &g, M, i);
 }
 
 // Digest md5_hash
@@ -128,10 +130,11 @@ void            hash_md5(t_mem *mem)
 	int			block_jump;
 	int			i;  
     uint32_t	*M;
-    int         j;
-
+	int         j;
+	
 	block_jump = 0;
 	init_hash();
+	ft_memcpy(mem->h, H_5, sizeof(int) * 4);
 	while (block_jump < mem->len)
 	{
         M = (uint32_t*)(mem->data + block_jump);
@@ -139,8 +142,17 @@ void            hash_md5(t_mem *mem)
 		while (++i < 64)
             md5_hash_solver(M, i);
         j = -1;
-        while(++j < 4)
-            mem->h[j] += H_5[j];
+		while(++j < 4)
+		{
+			mem->h[j] += H_5[j];
+			printf("The no %d: & mem[%d] is %u\n",i,j,H_5[j]);
+		}
+		printf("\n\n\n");
+		j = -1;
+		while(++j < 4)
+		{
+			printf("The no %d: & mem[%d] is %u\n",i,j,mem->h[j]);
+		}
         block_jump += 64;
 	}
 }

@@ -32,16 +32,16 @@ lib:
 	@$(MAKE) -C ./libft/
 	
 clean:
-	@echo "$(CYEL)[FT_SSL] :$(CNO) $(CGRE)Cleaning ft_ssl objects$(CE)";
+	@echo "$(CYEL)[FT_SSL] :$(CNO) $(CBLUE)Cleaning ft_ssl objects$(CE)";
 	@rm -f $(OBJ)
 	@$(MAKE) -C ./libft/ clean
 	@echo "$(CYEL)[FT_SSL] : $(CGRE)Cleaned Successfully$(CNO)";
 
 fclean:	clean
-	@echo "\033[K$(CYEL)[FT_SSL] :$(CNO) $(CGRE)Cleaning all binairies ...$(CNO)";
+	@echo "\033[K$(CYEL)[FT_SSL] :$(CNO) $(CBLUE)Cleaning all binairies ...$(CNO)";
 	@rm -f $(NAME)
 	@$(MAKE) -C ./libft/ fclean
-	@echo "\033[K$(CYEL)[FT_SSL] :$(CNO) $(CBLUE) Cleaned successfully binairies ...$(CNO)";
+	@echo "\033[K$(CYEL)[FT_SSL] :$(CNO) $(CGRE) Cleaned successfully binairies ...$(CNO)";
 re: fclean all
 
 .PHONY: all clean fclean re

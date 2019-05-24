@@ -6,11 +6,20 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:13:38 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 16:58:01 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/24 10:42:42 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
+
+uint64_t	swap_uint64(uint64_t val)
+{
+	val = ((val << 8) & 0xFF00FF00FF00FF00ULL) |
+	((val >> 8) & 0x00FF00FF00FF00FFULL);
+	val = ((val << 16) & 0xFFFF0000FFFF0000ULL) |
+	((val >> 16) & 0x0000FFFF0000FFFFULL);
+	return (val << 32) | (val >> 32);
+}
 
 static	char	*itoa_store(intmax_t *num, int base, int *i, int *count)
 {

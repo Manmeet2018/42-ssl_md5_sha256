@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 16:58:42 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/24 10:43:11 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,33 +80,25 @@ typedef struct		s_mem
 typedef t_mem			*(*t_padding)(t_mem *mem);
 typedef void			(*t_hash)(t_mem *mem);
 typedef void			(*t_print)(t_mem *mem);
-//typedef unsigned 	Digest_sha256[4];
-// unsigned int H_5 = {
-// 	0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
-// };
-// extern unsigned int H_256 = {
-// 	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-// 	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-// };
 
 // Fuctions Prototype
-int		Error_print(char *str);
-t_opt	*opt_checker(t_opt *opt, char **argv);
-t_mem	*stdin_read_fd(int fd);
-void	read_stdin(t_opt *opt);
-t_mem	*ft_memjoin(t_mem *dest, t_mem *src);
-void	ft_free_mem(t_mem *mem);
-void	hash_md5(t_mem *mem);
-t_mem	*padding_md5(t_mem *mem);
-void	write_file_error(char *file, t_opt *opt);
-void	write_prefix(t_opt *opt, t_arg *arg);
-void	write_suffix(t_arg *arg);
-void	write_md5(t_mem *mem);
-void	write_sha256(t_mem *mem);
-void	hash_sha256(t_mem *mem);
-t_mem	*padding_sha256(t_mem *mem);
-char	*ft_itoa_base(intmax_t n, int base);
-
+int			Error_print(char *str);
+t_opt		*opt_checker(t_opt *opt, char **argv);
+t_mem		*stdin_read_fd(int fd);
+void		read_stdin(t_opt *opt);
+t_mem		*ft_memjoin(t_mem *dest, t_mem *src);
+void		ft_free_mem(t_mem *mem);
+void		hash_md5(t_mem *mem);
+t_mem		*padding_md5(t_mem *mem);
+void		write_file_error(char *file, t_opt *opt);
+void		write_prefix(t_opt *opt, t_arg *arg);
+void		write_suffix(t_arg *arg);
+void		write_md5(t_mem *mem);
+void		write_sha256(t_mem *mem);
+void		hash_sha256(t_mem *mem);
+t_mem		*padding_sha256(t_mem *mem);
+char		*ft_itoa_base(intmax_t n, int base);
+uint64_t	swap_uint64(uint64_t val);
 
 // main struct for all operation
 # endif
