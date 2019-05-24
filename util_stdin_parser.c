@@ -6,11 +6,15 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:08:46 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 12:45:55 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 16:57:57 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
+
+t_padding		s_paddings[] = {padding_md5, padding_sha256};
+t_hash			s_hash_value[] = {hash_md5, hash_sha256};
+t_print			s_writer[] = {write_md5, write_sha256};
 
 t_mem	*stdin_read_fd(int fd)
 {

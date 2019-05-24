@@ -6,19 +6,22 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:41 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 12:54:18 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 17:03:10 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
 
+t_padding		h_paddings[] = {padding_md5, padding_sha256};
+t_hash			h_hash_value[] = {hash_md5, hash_sha256};
+t_print			h_writer[] = {write_md5, write_sha256};
 
 void	ft_hash(t_opt *opt, t_mem *msg, t_arg *arg)
 {
-	msg = s_paddings[opt->hash_pos](msg);
-	s_hash_value[opt->hash_pos](msg);
+	msg = h_paddings[opt->hash_pos](msg);
+	h_hash_value[opt->hash_pos](msg);
 	(!opt->r && !opt->q) ? (write_prefix(opt, arg)) : 0;
-	s_writer[opt->hash_pos](msg);
+	h_writer[opt->hash_pos](msg);
 	(opt->r && !opt->q) ? (write_suffix(arg)) : 0;
 	ft_free_mem(msg);
 	ft_putchar('\n');

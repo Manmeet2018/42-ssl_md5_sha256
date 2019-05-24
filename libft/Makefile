@@ -3,15 +3,25 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: maparmar <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/15 20:49:48 by maparmar          #+#    #+#              #
-#    Updated: 2019/02/21 15:41:15 by maparmar         ###   ########.fr        #
+#    Updated: 2019/05/23 15:59:40 by maparmar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-NAME = libft.a
+
 CFLAGS = -Wall -Werror -Wextra -I $(INCLUDES)
 INCLUDES = libft.h
+LIB = libft.a
+CC = gcc
+AR = ar rc
+RM = rm -rf
+RANLIB = ranlib
+CG = \033[92m
+CY =  \033[93m
+CE = \033[0m
+CB = \033[34m
+CR = \x1b[31;01m
 FILES = ft_atoi.c \
 		ft_bzero.c \
 		ft_isalnum.c \
@@ -78,6 +88,23 @@ FILES = ft_atoi.c \
 
 OBJ = $(FILES:.c=.o)
 
+%.o: %.c
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CR)Compiling $<$(CE)\033[1A";
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+nohd: $(OBJ)
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CR)Creating Library$(CE)\033[1A";
+	@$(AR) $(LIB) $(OBJ)
+	@$(RANLIB) $(LIB)
+
+nohdclean:
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning object files...$(CE)\033[1A";
+	@$(RM) $(OBJ)
+
+nohdfclean: nohdclean
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning Library...$(CE)\033[1A";
+	@$(RM) $(LIB)
+
 all: $(NAME)
 
 $(NAME):
@@ -86,12 +113,13 @@ $(NAME):
 	ranlib $(NAME)
 
 clean:
-	rm -rf $(OBJ)
-	echo "Libft: clean: objects cleaned."
+	@$(RM) $(OBJ)
+	@echo "\033[K$(CY)[LIBFT] :$(CG) $(CR)objects cleaned $(CE)\033[1A";
 
 fclean: clean
-	rm -f $(NAME)
-	echo "Libft: fclean: library deleted."
+	@echo "\033[K$(CY)[LIBFT] :$(CG) $(CR)Library deleted $(CE)\033[1A";
+	@$(RM) $(NAME)
+	
 
 re: fclean all
 

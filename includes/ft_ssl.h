@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 14:08:51 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 16:58:42 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <errno.h>
 # include <string.h>
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <stdlib.h>
 
 # define HASH_STRING (const char*[3]){"md5", "sha256", "NULL"}
 # define BUFFER 128
@@ -106,8 +109,4 @@ char	*ft_itoa_base(intmax_t n, int base);
 
 
 // main struct for all operation
-t_padding		s_paddings[] = {padding_md5, padding_sha256};
-t_hash			s_hash_value[] = {hash_md5, hash_sha256};
-t_print			s_writer[] = {write_md5, write_sha256};
-
 # endif

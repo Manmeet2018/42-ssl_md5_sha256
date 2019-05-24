@@ -6,13 +6,13 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 13:47:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 13:35:45 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 17:19:58 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
 
-extern unsigned int H_5[4];
+unsigned int H_5[4];
 
 int32_t h_s[64] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17,

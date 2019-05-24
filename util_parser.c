@@ -6,11 +6,11 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 10:56:01 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 12:45:57 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 16:57:59 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
 
 int		Error_print(char *str)
 {

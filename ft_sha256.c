@@ -6,13 +6,13 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 13:35:38 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 17:03:13 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
 
-extern unsigned int H_256[8];
+unsigned int H_256[8];
 
 unsigned int h_m[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -32,7 +32,6 @@ unsigned int h_m[64] = {
 	0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
-
 
 // Padding for extra 0's 
 t_mem	*padding_sha256(t_mem *mem)
@@ -103,7 +102,7 @@ static void		sha256_hash_solver(unsigned int *M, int i)
 }
 
 // Digest sha_hash
-void		init_hash()
+static void		init_hash()
 {
 	H_256[0] = 0x6a09e667;
 	H_256[1] = 0xbb67ae85;

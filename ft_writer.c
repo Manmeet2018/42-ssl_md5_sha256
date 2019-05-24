@@ -6,11 +6,11 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 12:09:18 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 12:46:00 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/23 16:58:06 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl.h"
+#include "includes/ft_ssl.h"
 
 void	write_file_error(char *file, t_opt *opt)
 {
