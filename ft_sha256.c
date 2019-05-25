@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sha256.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manmeetsingh <manmeetsingh@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 11:39:13 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/24 22:03:34 by manmeetsing      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,28 @@ static void		init_hash()
 }
 
 //sha_hash_solver
-static void		sha256_hash_solver(unsigned int *M, int i)
+ void		sha256_hash_solver(unsigned int *M)
 {
+	int i;
 	unsigned int t[2];
 
 	i = -1;
-	init_hash();
+	// printf("-> mem[0] is %u\n",H_256[0]);
+	// printf("-> mem[1] is %u\n",H_256[1]);
+	// printf("-> mem[2] is %u\n",H_256[2]);
+	// printf("-> mem[3] is %u\n",H_256[3]);
+	// printf("-> mem[4] is %u\n",H_256[4]);
+	// printf("-> mem[5] is %u\n",H_256[5]);
+	// printf("-> mem[6] is %u\n",H_256[6]);
+	// printf("-> mem[7] is %u\n\n\n",H_256[7]);
 	while(++i < 64)
 	{
+		//printf("M[%d] is %u\n",i, M[i]);
 		t[0] = H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
 		t[1] = AA(A_A) + MAJ(A_A, B_B, C_C);
+	// printf("-> T_1 is %u\n",t[0]);
+	// printf("-> T_2 is %u\n\n\n",t[1]);
+	
 		H_H = G_G;
 		G_G = F_F;
 		F_F = E_E;
@@ -113,7 +125,23 @@ static void		sha256_hash_solver(unsigned int *M, int i)
 		C_C = B_B;
 		B_B = A_A;
 		A_A = t[0] + t[1];
-	}
+
+
+// (*m).t = (*m).h + B((*m).e) +
+// 		CH((*m).e, (*m).f, (*m).g) + g_m[i] + w[i];
+// 	(*m).t2 = A((*m).a) + MAJ((*m).a, (*m).b, (*m).c);
+// 	(*m).h = (*m).g;
+// 	(*m).g = (*m).f;
+// 	(*m).f = (*m).e;
+// 	(*m).e = (*m).d + (*m).t;
+// 	(*m).d = (*m).c;
+// 	(*m).c = (*m).b;
+// 	(*m).b = (*m).a;
+// 	(*m).a = (*m).t + (*m).t2;
+
+	reset();
+}
+	// printf("-> mem[%d] is %u\n\n\n",i,A_A);
 }
 
 // driver sha_hash_256
@@ -126,11 +154,15 @@ void            hash_sha256(t_mem *mem)
     block_jump = 0;
 	M = NULL;
 	init_hash();
-	ft_memcpy(mem->h, H_256, sizeof(int) * 8);
+	
 	while (block_jump < mem->len)
 	{
         M = get_cell(mem->data + block_jump);
-        sha256_hash_solver(M, block_jump);
+		j = -1;
+		while(++j < 64)
+			printf("M[%d] -> is %u\n", j, M[j]);
+		ft_memcpy(mem->h, H_256, sizeof(int) * 8);
+		sha256_hash_solver(M);
         j = -1;
         while(++j < 8)
             mem->h[j] += H_256[j];
