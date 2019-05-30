@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ssl.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manmeetsingh <manmeetsingh@student.42.f    +#+  +:+       +#+        */
+/*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 22:05:04 by manmeetsing      ###   ########.fr       */
+/*   Updated: 2019/05/24 10:43:11 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <stdlib.h>
 
 # define HASH_STRING (const char*[3]){"md5", "sha256", "NULL"}
-# define BUFFER 1024
+# define BUFFER 128
 # define F(b, c, d) ((b & c) | (~(b) & d))
 # define G(B, C, D) ((B & D) | (C & ~D))
 # define H(B, C, D) (B ^ C ^ D)
@@ -50,8 +50,6 @@
 # define F_F H_256[5]
 # define G_G H_256[6]
 # define H_H H_256[7]
-# define reset() (H_256[0] = A_A, H_256[1] = B_B, H_256[2] = C_C, H_256[3] = D_D, H_256[4] = E_E, H_256[5] = F_F, H_256[6] = G_G, H_256[7] = H_H)
-
 
 typedef struct		s_arg
 {
@@ -64,7 +62,7 @@ typedef struct		s_arg
 typedef struct		s_opt
 {
 	int				hash_pos;
-	struct s_arg	*arg;
+	t_arg			*arg;
 	int				p;
 	int				q;
 	int				r;
