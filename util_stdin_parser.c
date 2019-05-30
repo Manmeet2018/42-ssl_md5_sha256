@@ -58,3 +58,17 @@ void	read_stdin(t_opt *opt)
 	ft_free_mem(msg);
 	ft_putchar('\n');
 }
+
+
+// Digest sha_hash
+void		init_hash_mem(t_mem *mem)
+{
+	mem->h[0] = 0x6a09e667;
+	mem->h[1] = 0xbb67ae85;
+	mem->h[2] = 0x3c6ef372;
+	mem->h[3] = 0xa54ff53a;
+	mem->h[4] = 0x510e527f;
+	mem->h[5] = 0x9b05688c;
+	mem->h[6] = 0x1f83d9ab;
+	mem->h[7] = 0x5be0cd19;
+}
