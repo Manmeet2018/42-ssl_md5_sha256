@@ -6,22 +6,22 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:41 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 17:03:10 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/30 00:41:01 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
 
-t_padding		h_paddings[] = {padding_md5, padding_sha256};
-t_hash			h_hash_value[] = {hash_md5, hash_sha256};
-t_print			h_writer[] = {write_md5, write_sha256};
+t_padding		g_paddings[] = {padding_md5, padding_sha256};
+t_hash			g_hash_value[] = {hash_md5, hash_sha256};
+t_print			g_writer[] = {write_md5, write_sha256};
 
 void	ft_hash(t_opt *opt, t_mem *msg, t_arg *arg)
 {
-	msg = h_paddings[opt->hash_pos](msg);
-	h_hash_value[opt->hash_pos](msg);
+	msg = g_paddings[opt->hash_pos](msg);
+	g_hash_value[opt->hash_pos](msg);
 	(!opt->r && !opt->q) ? (write_prefix(opt, arg)) : 0;
-	h_writer[opt->hash_pos](msg);
+	g_writer[opt->hash_pos](msg);
 	(opt->r && !opt->q) ? (write_suffix(arg)) : 0;
 	ft_free_mem(msg);
 	ft_putchar('\n');
@@ -64,17 +64,17 @@ void	read_args(t_opt *opt)
 	}
 }
 
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-    t_opt   *opt;
+	t_opt	*opt;
 
-    opt = NULL;
-    if(argc < 2)
-        return (Error_print(argv[0]));
-    opt = opt_checker(opt, argv); // util_parser.c
-    if (opt->p || !opt->arg)
-        read_stdin(opt); // util_stdin_parser.c
-    if (argc >= 3)
+	opt = NULL;
+	if (argc < 2)
+		return (error_print(argv[0]));
+	opt = opt_checker(opt, argv);
+	if (opt->p || !opt->arg)
+		read_stdin(opt);
+	if (argc >= 3)
 		read_args(opt);
 	return (0);
 }

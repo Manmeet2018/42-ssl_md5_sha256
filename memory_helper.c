@@ -6,13 +6,13 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:13:38 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 10:42:42 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/30 00:38:28 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
 
-uint64_t	swap_uint64(uint64_t val)
+uint64_t		swap_uint64(uint64_t val)
 {
 	val = ((val << 8) & 0xFF00FF00FF00FF00ULL) |
 	((val >> 8) & 0x00FF00FF00FF00FFULL);
@@ -21,7 +21,7 @@ uint64_t	swap_uint64(uint64_t val)
 	return (val << 32) | (val >> 32);
 }
 
-static	char	*itoa_store(intmax_t *num, int base, int *i, int *count)
+static char		*itoa_store(intmax_t *num, int base, int *i, int *count)
 {
 	char	*new;
 	long	tmp;
@@ -74,7 +74,7 @@ char			*ft_itoa_base(intmax_t n, int base)
 	return (new);
 }
 
-t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
+t_mem			*ft_memjoin(t_mem *dest, t_mem *src)
 {
 	t_mem *ret;
 
@@ -94,7 +94,7 @@ t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
 	return (ret);
 }
 
-void	ft_free_mem(t_mem *mem)
+void			ft_free_mem(t_mem *mem)
 {
 	free(mem->data);
 	free(mem);

@@ -6,20 +6,18 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 13:47:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 19:22:28 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/30 01:36:48 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
 
-int32_t h_s[64] = {
-    7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17,
+int32_t g_s[64] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17,
 	22, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23,
 	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21,
-    6, 10, 15, 21, 6, 10, 15, 21
-};
+	6, 10, 15, 21, 6, 10, 15, 21};
 
-int32_t h_k[64] = {
+int32_t g_k[64] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
 	0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -35,11 +33,9 @@ int32_t h_k[64] = {
 	0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
 	0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
 	0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
-};
+	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
 
-// hash tabel
-void	init_hash(t_mem *mem)
+static void		init_hash(t_mem *mem)
 {
 	mem->h[0] = 0x67452301;
 	mem->h[1] = 0xefcdab89;
@@ -47,14 +43,13 @@ void	init_hash(t_mem *mem)
 	mem->h[3] = 0x10325476;
 }
 
-// Padding for extra 0's
-t_mem	*padding_md5(t_mem *mem)
+t_mem			*padding_md5(t_mem *mem)
 {
 	t_mem		*msg;
 	size_t		newlen;
 	size_t		len;
-    uint32_t	bitlen;
-    
+	uint32_t	bitlen;
+
 	msg = (t_mem *)malloc(sizeof(t_mem));
 	init_hash(msg);
 	len = mem->len;
@@ -73,70 +68,59 @@ t_mem	*padding_md5(t_mem *mem)
 	return (msg);
 }
 
-// helper for solver
-static void     hash_md5_solver_helper(uint32_t *f, uint32_t *g, uint32_t *M, int i, h_a *m)
+unsigned int	hash_md5_solver_helper(t_a *m)
 {
-	unsigned int T;
+	unsigned int t;
 
-    T = D;
-    D = C;
-    C = B;
-	B += LROT(*f + A + h_k[i] + M[*g], h_s[i]);
-	A = T;
+	t = D;
+	D = C;
+	C = B;
+	return (t);
 }
 
-//hash_md5_solver
-static void     md5_hash_solver(uint32_t *M, int i, h_a *m)
+static void		md5_hash_solver(uint32_t *w, int i, t_a *m)
 {
-    uint32_t g;
-    uint32_t f;
-    
-    if (i < 16)
-    {
-        f = F(B, C, D);
-        g = i;
-    }
-    else if(i <= 31)
-    {
-        f = G(B, C, D);
-        g = (5 * i + 1) % 16;
-    }
-    else if ( i <= 47)
-	{
-		f = H(B, C, D);
-		g = (3 * i + 5) % 16;
-	}
+	uint32_t		g;
+	uint32_t		f;
+	unsigned int	t;
+
+	f = 0;
+	g = 0;
+	if (i < 16)
+		F1(i, f, g);
+	else if (i <= 31)
+		F2(i, f, g);
+	else if (i <= 47)
+		F3(i, f, g);
 	else
-	{
-		f = I(B , C, D);
-		g = (7 * i) % 16;
-	}
-	hash_md5_solver_helper(&f, &g, M, i, m);
+		F4(i, f, g);
+	t = hash_md5_solver_helper(m);
+	B += LROT(f + A + g_k[i] + w[g], g_s[i]);
+	A = t;
 }
 
-// driver md5_hash
-void            hash_md5(t_mem *mem)
+void			hash_md5(t_mem *mem)
 {
 	int			block_jump;
-	int			i;  
-	uint32_t	*M;
-	h_a 		m;
-	
+	int			i;
+	uint32_t	*w;
+	t_a			m;
+
 	block_jump = 0;
 	while (block_jump < mem->len)
 	{
-		M = (uint32_t*)(mem->data + block_jump);
-		m.H_A = mem->h[0];
-		m.H_B = mem->h[1];
-		m.H_C = mem->h[2];
-		m.H_D = mem->h[3];
-        i = -1;
+		w = (uint32_t*)(mem->data + block_jump);
+		m.g_a = mem->h[0];
+		m.g_b = mem->h[1];
+		m.g_c = mem->h[2];
+		m.g_d = mem->h[3];
+		i = -1;
 		while (++i < 64)
-			md5_hash_solver(M, i, &m);
-		mem->h[0] += m.H_A;
-		mem->h[1] += m.H_B;
-		mem->h[2] += m.H_C;
-		mem->h[3] += m.H_D;
-        block_jump += 64;
+			md5_hash_solver(w, i, &m);
+		mem->h[0] += m.g_a;
+		mem->h[1] += m.g_b;
+		mem->h[2] += m.g_c;
+		mem->h[3] += m.g_d;
+		block_jump += 64;
 	}
 }

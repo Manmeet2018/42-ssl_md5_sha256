@@ -6,13 +6,13 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 19:22:23 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/30 01:39:49 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
 
-unsigned int h_m[64] = {
+unsigned int g_m[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -28,8 +28,7 @@ unsigned int h_m[64] = {
 	0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
 	0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
 	0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
-	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-};
+	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
 t_mem			*padding_sha256(t_mem *mem)
 {
@@ -56,22 +55,21 @@ t_mem			*padding_sha256(t_mem *mem)
 	return (message);
 }
 
-void	sha256_hash_solver_helper(h_a *a, unsigned int *M, int i)
+void			sha256_hash_solver_helper(t_a *a, unsigned int *w, int i)
 {
-	H_T = H_H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
-		H_T_T = AA(A_A) + MAJ(A_A, B_B, C_C);
-		H_H_H = G_G;
-		G_G = F_F;
-		F_F = E_E;
-		E_E = D_D + H_T;
-		D_D = C_C;
-		C_C = B_B;
-		B_B = A_A;
-		A_A = H_T + H_T_T;
+	H_T = H_H_H + BB(E_E) + CH(E_E, F_F, G_G) + g_m[i] + w[i];
+	H_T_T = AA(A_A) + MAJ(A_A, B_B, C_C);
+	H_H_H = G_G;
+	G_G = F_F;
+	F_F = E_E;
+	E_E = D_D + H_T;
+	D_D = C_C;
+	C_C = B_B;
+	B_B = A_A;
+	A_A = H_T + H_T_T;
 }
 
-// Get block and it's size is of 64 bit.
-unsigned int    *get_cell(unsigned char *offset)
+unsigned int	*get_cell(unsigned char *offset)
 {
 	int				i;
 	unsigned int	*w;
@@ -89,49 +87,46 @@ unsigned int    *get_cell(unsigned char *offset)
 			w[i] = DD(w[i - 2]) + w[i - 7] + CC(w[i - 15]) + w[i - 16];
 	}
 	return (w);
-    
 }
-//sha_hash_solver
-void	sha256_hash_solver(h_a *a, unsigned int *M, t_mem *mem)
+
+void			sha256_hash_solver(t_a *a, unsigned int *w, t_mem *mem)
 {
-	int i;
-	
+	int				i;
+
 	i = -1;
-	(*a).H_A = mem->h[0];
-	(*a).H_B = mem->h[1];
-	(*a).H_C = mem->h[2];
-	(*a).H_D = mem->h[3];
-	(*a).H_E = mem->h[4];
-	(*a).H_F = mem->h[5];
-	(*a).H_G = mem->h[6];
-	(*a).H_H = mem->h[7];
-	while(++i < 64)
-		sha256_hash_solver_helper(a, M, i);	
+	(*a).g_a = mem->h[0];
+	(*a).g_b = mem->h[1];
+	(*a).g_c = mem->h[2];
+	(*a).g_d = mem->h[3];
+	(*a).g_e = mem->h[4];
+	(*a).g_f = mem->h[5];
+	(*a).g_g = mem->h[6];
+	(*a).g_h = mem->h[7];
+	while (++i < 64)
+		sha256_hash_solver_helper(a, w, i);
 }
 
-// driver sha_hash_256
-void            hash_sha256(t_mem *mem)
+void			hash_sha256(t_mem *mem)
 {
-	int		    	block_jump;  
-	unsigned int    *M;
-	h_a				a;
+	int				block_jump;
+	unsigned int	*w;
+	t_a				a;
 
-    block_jump = 0;
-	M = NULL;
+	block_jump = 0;
+	w = NULL;
 	init_hash_mem(mem);
 	while (block_jump < mem->len)
 	{
-
-		M = get_cell(mem->data + block_jump);
-		sha256_hash_solver(&a, M,mem);
-		mem->h[0] += a.H_A;
-		mem->h[1] += a.H_B;
-		mem->h[2] += a.H_C;
-		mem->h[3] += a.H_D;
-		mem->h[4] += a.H_E;
-		mem->h[5] += a.H_F;
-		mem->h[6] += a.H_G;
-		mem->h[7] += a.H_H;
+		w = get_cell(mem->data + block_jump);
+		sha256_hash_solver(&a, w, mem);
+		mem->h[0] += a.g_a;
+		mem->h[1] += a.g_b;
+		mem->h[2] += a.g_c;
+		mem->h[3] += a.g_d;
+		mem->h[4] += a.g_e;
+		mem->h[5] += a.g_f;
+		mem->h[6] += a.g_g;
+		mem->h[7] += a.g_h;
 		block_jump += 64;
 	}
 }

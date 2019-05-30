@@ -6,15 +6,15 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:08:46 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 16:06:19 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/30 01:47:53 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
 
-t_padding		s_paddings[] = {padding_md5, padding_sha256};
-t_hash			s_hash_value[] = {hash_md5, hash_sha256};
-t_print			s_writer[] = {write_md5, write_sha256};
+t_padding		g__paddings[] = {padding_md5, padding_sha256};
+t_hash			g__hash_value[] = {hash_md5, hash_sha256};
+t_print			g__writer[] = {write_md5, write_sha256};
 
 t_mem	*stdin_read_fd(int fd)
 {
@@ -43,7 +43,6 @@ t_mem	*stdin_read_fd(int fd)
 	return (mem);
 }
 
-
 void	read_stdin(t_opt *opt)
 {
 	t_mem *msg;
@@ -52,16 +51,14 @@ void	read_stdin(t_opt *opt)
 	msg = stdin_read_fd(0);
 	if (opt->p)
 		ft_putstr((char *)msg->data);
-	msg = s_paddings[opt->hash_pos](msg);
-	s_hash_value[opt->hash_pos](msg);
-	s_writer[opt->hash_pos](msg);
+	msg = g__paddings[opt->hash_pos](msg);
+	g__hash_value[opt->hash_pos](msg);
+	g__writer[opt->hash_pos](msg);
 	ft_free_mem(msg);
 	ft_putchar('\n');
 }
 
-
-// Digest sha_hash
-void		init_hash_mem(t_mem *mem)
+void	init_hash_mem(t_mem *mem)
 {
 	mem->h[0] = 0x6a09e667;
 	mem->h[1] = 0xbb67ae85;
