@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 18:41:40 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 19:23:12 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <stdlib.h>
-
 # define HASH_STRING (const char*[3]){"md5", "sha256", "NULL"}
 # define BUFFER 1024
 # define F(b, c, d) ((b & c) | (~(b) & d))
@@ -31,10 +30,10 @@
 # define I(B, C, D) (C ^ (B | ~D))
 # define LROT(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
 # define RROT(x, c) (((x) >> (c)) | ((x) << (32 - (c))))
-# define A H_5[0]
-# define B H_5[1]
-# define C H_5[2]
-# define D H_5[3]
+# define A (*m).H_A
+# define B (*m).H_B
+# define C (*m).H_C
+# define D (*m).H_D
 # define CH(x, y, z) (((x) & (y)) ^ (~(x) & (z)))
 # define MAJ(x, y, z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 # define SHR(x, n) ((x) >> n)
@@ -42,6 +41,17 @@
 # define BB(x) (RROT(x, 6) ^ RROT(x, 11) ^ RROT(x, 25))
 # define CC(x) (RROT(x, 7) ^ RROT(x, 18) ^ SHR(x, 3))
 # define DD(x) (RROT(x, 17) ^ RROT(x, 19) ^ SHR(x, 10))
+# define A_A (*a).H_A
+# define B_B (*a).H_B
+# define C_C (*a).H_C
+# define D_D (*a).H_D
+# define E_E (*a).H_E
+# define F_F (*a).H_F
+# define G_G (*a).H_G
+# define H_H_H (*a).H_H
+# define H_T (*a).t[0]
+# define H_T_T (*a).t[1]
+
 
 typedef struct		s_a_256
 {
@@ -103,6 +113,7 @@ void		hash_sha256(t_mem *mem);
 t_mem		*padding_sha256(t_mem *mem);
 char		*ft_itoa_base(intmax_t n, int base);
 uint64_t	swap_uint64(uint64_t val);
+void		init_hash_mem(t_mem *mem);
 
 // main struct for all operation
 # endif

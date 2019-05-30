@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 18:12:45 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 19:22:23 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,16 @@ t_mem			*padding_sha256(t_mem *mem)
 
 void	sha256_hash_solver_helper(h_a *a, unsigned int *M, int i)
 {
-	(*a).t[0] = (*a).H_H + BB((*a).H_E) +
-		CH((*a).H_E, (*a).H_F, (*a).H_G) + h_m[i] + M[i];
-	(*a).t[1] = AA((*a).H_A) + MAJ((*a).H_A, (*a).H_B, (*a).H_C);
-	(*a).H_H = (*a).H_G;
-	(*a).H_G = (*a).H_F;
-	(*a).H_F = (*a).H_E;
-	(*a).H_E = (*a).H_D + (*a).t[0];
-	(*a).H_D = (*a).H_C;
-	(*a).H_C = (*a).H_B;
-	(*a).H_B = (*a).H_A;
-	(*a).H_A = (*a).t[0] + (*a).t[1];
+	H_T = H_H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
+		H_T_T = AA(A_A) + MAJ(A_A, B_B, C_C);
+		H_H_H = G_G;
+		G_G = F_F;
+		F_F = E_E;
+		E_E = D_D + H_T;
+		D_D = C_C;
+		C_C = B_B;
+		B_B = A_A;
+		A_A = H_T + H_T_T;
 }
 
 // Get block and it's size is of 64 bit.

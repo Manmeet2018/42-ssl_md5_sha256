@@ -6,13 +6,11 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 13:47:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/29 17:38:45 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 19:22:28 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
-
-unsigned int H_5[4];
 
 int32_t h_s[64] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17,
@@ -40,6 +38,15 @@ int32_t h_k[64] = {
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
+// hash tabel
+void	init_hash(t_mem *mem)
+{
+	mem->h[0] = 0x67452301;
+	mem->h[1] = 0xefcdab89;
+	mem->h[2] = 0x98badcfe;
+	mem->h[3] = 0x10325476;
+}
+
 // Padding for extra 0's
 t_mem	*padding_md5(t_mem *mem)
 {
@@ -47,12 +54,9 @@ t_mem	*padding_md5(t_mem *mem)
 	size_t		newlen;
 	size_t		len;
     uint32_t	bitlen;
-    int         i;
     
-    i = -1;
-    msg = (t_mem *)malloc(sizeof(t_mem));
-    while(++i < 4)
-        mem->h[i] = H_5[i];
+	msg = (t_mem *)malloc(sizeof(t_mem));
+	init_hash(msg);
 	len = mem->len;
 	bitlen = len * 8;
 	newlen = len + 1;
@@ -70,7 +74,7 @@ t_mem	*padding_md5(t_mem *mem)
 }
 
 // helper for solver
-static void     hash_md5_solver_helper(uint32_t *f, uint32_t *g, uint32_t *M, int i)
+static void     hash_md5_solver_helper(uint32_t *f, uint32_t *g, uint32_t *M, int i, h_a *m)
 {
 	unsigned int T;
 
@@ -79,15 +83,10 @@ static void     hash_md5_solver_helper(uint32_t *f, uint32_t *g, uint32_t *M, in
     C = B;
 	B += LROT(*f + A + h_k[i] + M[*g], h_s[i]);
 	A = T;
-    H_5[0] = A;
-    H_5[1] = B;
-    H_5[2] = C;
-    H_5[3] = D;
-    
 }
 
 //hash_md5_solver
-static void     md5_hash_solver(uint32_t *M, int i)
+static void     md5_hash_solver(uint32_t *M, int i, h_a *m)
 {
     uint32_t g;
     uint32_t f;
@@ -112,16 +111,7 @@ static void     md5_hash_solver(uint32_t *M, int i)
 		f = I(B , C, D);
 		g = (7 * i) % 16;
 	}
-	hash_md5_solver_helper(&f, &g, M, i);
-}
-
-// Digest md5_hash
-void		init_hash()
-{
-	H_5[0] = 0x67452301;
-	H_5[1] = 0xefcdab89;
-	H_5[2] = 0x98badcfe;
-	H_5[3] = 0x10325476;
+	hash_md5_solver_helper(&f, &g, M, i, m);
 }
 
 // driver md5_hash
@@ -129,20 +119,24 @@ void            hash_md5(t_mem *mem)
 {
 	int			block_jump;
 	int			i;  
-    uint32_t	*M;
+	uint32_t	*M;
+	h_a 		m;
 	
 	block_jump = 0;
-	init_hash();
-	ft_memcpy(mem->h, H_5, sizeof(int) * 4);
 	while (block_jump < mem->len)
 	{
-        M = (uint32_t*)(mem->data + block_jump);
+		M = (uint32_t*)(mem->data + block_jump);
+		m.H_A = mem->h[0];
+		m.H_B = mem->h[1];
+		m.H_C = mem->h[2];
+		m.H_D = mem->h[3];
         i = -1;
 		while (++i < 64)
-			md5_hash_solver(M, i);
-		i = -1;
-		while(++i < 4)
-			mem->h[i] += H_5[i];
+			md5_hash_solver(M, i, &m);
+		mem->h[0] += m.H_A;
+		mem->h[1] += m.H_B;
+		mem->h[2] += m.H_C;
+		mem->h[3] += m.H_D;
         block_jump += 64;
 	}
 }
