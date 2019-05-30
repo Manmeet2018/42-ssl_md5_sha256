@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 20:30:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 10:43:11 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 18:41:40 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 # include <stdlib.h>
 
 # define HASH_STRING (const char*[3]){"md5", "sha256", "NULL"}
-# define BUFFER 128
+# define BUFFER 1024
 # define F(b, c, d) ((b & c) | (~(b) & d))
 # define G(B, C, D) ((B & D) | (C & ~D))
 # define H(B, C, D) (B ^ C ^ D)
 # define I(B, C, D) (C ^ (B | ~D))
 # define LROT(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
-# define RROT(x, c) (((x) >> (c)) | ((x) >> (32 - (c))))
+# define RROT(x, c) (((x) >> (c)) | ((x) << (32 - (c))))
 # define A H_5[0]
 # define B H_5[1]
 # define C H_5[2]
@@ -42,14 +42,19 @@
 # define BB(x) (RROT(x, 6) ^ RROT(x, 11) ^ RROT(x, 25))
 # define CC(x) (RROT(x, 7) ^ RROT(x, 18) ^ SHR(x, 3))
 # define DD(x) (RROT(x, 17) ^ RROT(x, 19) ^ SHR(x, 10))
-# define A_A H_256[0]
-# define B_B H_256[1]
-# define C_C H_256[2]
-# define D_D H_256[3]
-# define E_E H_256[4]
-# define F_F H_256[5]
-# define G_G H_256[6]
-# define H_H H_256[7]
+
+typedef struct		s_a_256
+{
+	unsigned int	H_A;
+	unsigned int	H_B;
+	unsigned int	H_C;
+	unsigned int	H_D;
+	unsigned int	H_E;
+	unsigned int	H_F;
+	unsigned int	H_G;
+	unsigned int	H_H;
+	unsigned int	t[2];
+}					h_a;
 
 typedef struct		s_arg
 {
@@ -62,7 +67,7 @@ typedef struct		s_arg
 typedef struct		s_opt
 {
 	int				hash_pos;
-	t_arg			*arg;
+	struct s_arg	*arg;
 	int				p;
 	int				q;
 	int				r;
@@ -75,7 +80,6 @@ typedef struct		s_mem
 	unsigned int	h[8];
 	int				len;
 }					t_mem;
-
 
 typedef t_mem			*(*t_padding)(t_mem *mem);
 typedef void			(*t_hash)(t_mem *mem);

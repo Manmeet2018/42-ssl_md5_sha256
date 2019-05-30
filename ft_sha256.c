@@ -6,13 +6,11 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 16:13:49 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 11:39:13 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 18:12:45 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_ssl.h"
-
-unsigned int H_256[8];
 
 unsigned int h_m[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -33,36 +31,50 @@ unsigned int h_m[64] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-// Padding for extra 0's 
-t_mem	*padding_sha256(t_mem *mem)
+t_mem			*padding_sha256(t_mem *mem)
 {
-	t_mem		*msg;
+	t_mem		*message;
 	size_t		newlen;
 	size_t		len;
-    uint32_t	bitlen;
+	uint64_t	bitlen;
 
-    msg = (t_mem *)malloc(sizeof(t_mem));
+	message = (t_mem *)malloc(sizeof(t_mem));
 	len = mem->len;
 	bitlen = len * 8;
 	newlen = len + 1;
 	while (newlen % 64 != 56)
 		newlen++;
-	msg->data = (unsigned char *)malloc(sizeof(unsigned char) * newlen);
-	msg->len = newlen;
-	ft_memcpy(msg->data, mem->data, mem->len);
-	msg->data[len] = (unsigned char)128;
+	message->data = (unsigned char *)malloc(sizeof(unsigned char) * newlen);
+	message->len = newlen;
+	memcpy(message->data, mem->data, mem->len);
+	message->data[len] = (unsigned char)128;
 	while (++len <= newlen)
-		msg->data[len] = 0;
+		message->data[len] = 0;
 	bitlen = swap_uint64(bitlen);
-	ft_memcpy(msg->data + newlen, &bitlen, 8);
+	memcpy(message->data + newlen, &bitlen, 8);
 	ft_free_mem(mem);
-	return (msg);
+	return (message);
+}
+
+void	sha256_hash_solver_helper(h_a *a, unsigned int *M, int i)
+{
+	(*a).t[0] = (*a).H_H + BB((*a).H_E) +
+		CH((*a).H_E, (*a).H_F, (*a).H_G) + h_m[i] + M[i];
+	(*a).t[1] = AA((*a).H_A) + MAJ((*a).H_A, (*a).H_B, (*a).H_C);
+	(*a).H_H = (*a).H_G;
+	(*a).H_G = (*a).H_F;
+	(*a).H_F = (*a).H_E;
+	(*a).H_E = (*a).H_D + (*a).t[0];
+	(*a).H_D = (*a).H_C;
+	(*a).H_C = (*a).H_B;
+	(*a).H_B = (*a).H_A;
+	(*a).H_A = (*a).t[0] + (*a).t[1];
 }
 
 // Get block and it's size is of 64 bit.
 unsigned int    *get_cell(unsigned char *offset)
 {
-    int				i;
+	int				i;
 	unsigned int	*w;
 
 	i = -1;
@@ -82,58 +94,59 @@ unsigned int    *get_cell(unsigned char *offset)
 }
 
 // Digest sha_hash
-static void		init_hash()
+static void		init_hash_mem(t_mem *mem)
 {
-	H_256[0] = 0x6a09e667;
-	H_256[1] = 0xbb67ae85;
-	H_256[2] = 0x3c6ef372;
-	H_256[3] = 0xa54ff53a;
-	H_256[4] = 0x510e527f;
-	H_256[5] = 0x9b05688c;
-	H_256[6] = 0x1f83d9ab;
-	H_256[7] = 0x5be0cd19;
+	mem->h[0] = 0x6a09e667;
+	mem->h[1] = 0xbb67ae85;
+	mem->h[2] = 0x3c6ef372;
+	mem->h[3] = 0xa54ff53a;
+	mem->h[4] = 0x510e527f;
+	mem->h[5] = 0x9b05688c;
+	mem->h[6] = 0x1f83d9ab;
+	mem->h[7] = 0x5be0cd19;
 }
 
 //sha_hash_solver
-static void		sha256_hash_solver(unsigned int *M, int i)
+void	sha256_hash_solver(h_a *a, unsigned int *M, t_mem *mem)
 {
-	unsigned int t[2];
-
+	int i;
+	
 	i = -1;
-	init_hash();
+	(*a).H_A = mem->h[0];
+	(*a).H_B = mem->h[1];
+	(*a).H_C = mem->h[2];
+	(*a).H_D = mem->h[3];
+	(*a).H_E = mem->h[4];
+	(*a).H_F = mem->h[5];
+	(*a).H_G = mem->h[6];
+	(*a).H_H = mem->h[7];
 	while(++i < 64)
-	{
-		t[0] = H_H + BB(E_E) + CH(E_E, F_F, G_G) + h_m[i] + M[i];
-		t[1] = AA(A_A) + MAJ(A_A, B_B, C_C);
-		H_H = G_G;
-		G_G = F_F;
-		F_F = E_E;
-		E_E = D_D + t[0];
-		D_D = C_C;
-		C_C = B_B;
-		B_B = A_A;
-		A_A = t[0] + t[1];
-	}
+		sha256_hash_solver_helper(a, M, i);	
 }
 
 // driver sha_hash_256
 void            hash_sha256(t_mem *mem)
 {
 	int		    	block_jump;  
-    unsigned int    *M;
-    int             j;
+	unsigned int    *M;
+	h_a				a;
 
     block_jump = 0;
 	M = NULL;
-	init_hash();
-	ft_memcpy(mem->h, H_256, sizeof(int) * 8);
+	init_hash_mem(mem);
 	while (block_jump < mem->len)
 	{
-        M = get_cell(mem->data + block_jump);
-        sha256_hash_solver(M, block_jump);
-        j = -1;
-        while(++j < 8)
-            mem->h[j] += H_256[j];
-        block_jump += 64;
+
+		M = get_cell(mem->data + block_jump);
+		sha256_hash_solver(&a, M,mem);
+		mem->h[0] += a.H_A;
+		mem->h[1] += a.H_B;
+		mem->h[2] += a.H_C;
+		mem->h[3] += a.H_D;
+		mem->h[4] += a.H_E;
+		mem->h[5] += a.H_F;
+		mem->h[6] += a.H_G;
+		mem->h[7] += a.H_H;
+		block_jump += 64;
 	}
 }

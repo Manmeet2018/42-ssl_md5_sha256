@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 13:47:39 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/24 11:31:28 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 17:38:45 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void            hash_md5(t_mem *mem)
 	int			block_jump;
 	int			i;  
     uint32_t	*M;
-	int         j;
 	
 	block_jump = 0;
 	init_hash();
@@ -140,19 +139,10 @@ void            hash_md5(t_mem *mem)
         M = (uint32_t*)(mem->data + block_jump);
         i = -1;
 		while (++i < 64)
-            md5_hash_solver(M, i);
-        j = -1;
-		while(++j < 4)
-		{
-			mem->h[j] += H_5[j];
-			printf("The no %d: & mem[%d] is %u\n",i,j,H_5[j]);
-		}
-		printf("\n\n\n");
-		j = -1;
-		while(++j < 4)
-		{
-			printf("The no %d: & mem[%d] is %u\n",i,j,mem->h[j]);
-		}
+			md5_hash_solver(M, i);
+		i = -1;
+		while(++i < 4)
+			mem->h[i] += H_5[i];
         block_jump += 64;
 	}
 }

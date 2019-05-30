@@ -6,7 +6,7 @@
 /*   By: maparmar <maparmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:08:46 by maparmar          #+#    #+#             */
-/*   Updated: 2019/05/23 16:57:57 by maparmar         ###   ########.fr       */
+/*   Updated: 2019/05/29 16:06:19 by maparmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_mem	*stdin_read_fd(int fd)
 
 	mem = NULL;
 	buf = (t_mem *)malloc(sizeof(t_mem));
-	buf->data = (unsigned char *)ft_strnew(BUFFER + 1);
+	buf->data = (unsigned char *)ft_strnew(BUFFER);
 	buf->len = 0;
 	while ((buf->len = read(fd, buf->data, BUFFER)))
 	{
