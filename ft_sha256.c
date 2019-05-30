@@ -93,7 +93,7 @@ unsigned int    *get_cell(unsigned char *offset)
 }
 
 // Digest sha_hash
-static void		init_hash_mem(t_mem *mem)
+void		init_hash_mem(t_mem *mem)
 {
 	mem->h[0] = 0x6a09e667;
 	mem->h[1] = 0xbb67ae85;
